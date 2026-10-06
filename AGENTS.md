@@ -33,6 +33,7 @@ For workflow-specific work, also read the relevant file in `docs/workflows/`.
 - Prefer small, focused changes over broad refactors.
 - Inspect existing code before introducing a new abstraction.
 - Avoid building V1 features that are explicitly out of scope.
+- When using shadcn/ui components, be aware they use Base UI primitives. Use the `render={<Element />}` prop instead of the Radix UI `asChild` prop to avoid TypeScript errors.
 
 ## Product guardrails
 
@@ -51,6 +52,7 @@ Do not turn V1 into a full restaurant ERP. Inventory/recipes, offline mode, paym
 5. Run relevant lint, typecheck, tests, and build commands.
 6. Update docs when behavior or architecture changes.
 7. Summarize what changed and what was validated.
+8. Proactively check off completed items or mark them as `(UI Prototyped)` in `docs/ROADMAP.md` immediately after finishing a significant implementation chunk. Do not wait for the user to ask.
 
 ## Do not do automatically
 
@@ -62,6 +64,7 @@ Do not turn V1 into a full restaurant ERP. Inventory/recipes, offline mode, paym
 - Treat a table session code as a permanent password.
 - Mark online payment as successful from client state alone.
 - Add ERP modules that are explicitly outside V1.
+- Start long-running dev servers (e.g., `pnpm dev`) as background daemons automatically unless explicitly requested, to avoid blocking ports.
 
 ## Documentation maintenance
 

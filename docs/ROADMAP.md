@@ -32,12 +32,12 @@ Definition of done: multiple restaurants can exist while their data remains stri
 
 ## Phase 2 — Restaurant setup
 
-- [ ] Branch settings
-- [ ] Table CRUD/status
+- [ ] Branch settings (UI Prototyped)
+- [ ] Table CRUD/status (UI Prototyped)
 - [ ] Stable QR/public identifiers
-- [ ] QR generation/printing
-- [ ] Menu categories/items
-- [ ] Staff setup
+- [ ] QR generation/printing (UI Prototyped)
+- [ ] Menu categories/items (UI Prototyped)
+- [ ] Staff setup (UI Prototyped)
 - [ ] Start table session
 - [ ] Generate session access code
 
@@ -47,7 +47,7 @@ Definition of done: multiple restaurants can exist while their data remains stri
 - [ ] Access-code verification
 - [ ] Temporary customer session authorization
 - [x] Digital menu (UI Prototyped)
-- [ ] Cart
+- [ ] Cart (UI Prototyped)
 - [ ] Order creation
 - [ ] Multiple devices per table session
 - [ ] Multiple orders per session
@@ -57,7 +57,7 @@ Definition of done: a real group can use several phones at one table and all ord
 
 ## Phase 4 — Kitchen
 
-- [ ] KDS queue
+- [ ] KDS queue (UI Prototyped)
 - [ ] Incoming order workflow
 - [ ] Preparation state changes
 - [ ] Realtime updates
@@ -65,10 +65,10 @@ Definition of done: a real group can use several phones at one table and all ord
 
 ## Phase 5 — Waiter operations
 
-- [ ] Call waiter/request assistance
+- [ ] Call waiter/request assistance (UI Prototyped)
 - [ ] Staff acknowledgement
 - [ ] Resolution
-- [ ] Serving state
+- [ ] Serving state (UI Prototyped)
 
 ## Phase 6 — Billing
 
