@@ -28,14 +28,16 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             isActive={false}
-                            className="hover:bg-transparent hover:text-primary focus:bg-transparent focus:text-primary active:bg-transparent active:text-primary data-open:bg-transparent data-open:text-primary"
+                            className="hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground active:bg-transparent active:text-foreground data-open:bg-transparent data-open:text-foreground"
                             size="lg"
                             render={<Link href="/dashboard" />}
                         >
                             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                                 <UtensilsCrossed className="size-4" />
                             </div>
-                            <span className="truncate font-bold text-2xl text-primary">RestroApp</span>
+                            <div className="text-2xl font-bold">Restro
+                                <span className="italic text-primary font-normal">App</span>
+                            </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
