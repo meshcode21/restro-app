@@ -9,6 +9,7 @@ repository/
 ├── apps/
 │   ├── web/          # Next.js frontend for Service Taker (Restaurants)
 │   ├── admin/        # Next.js frontend for Service Provider (Super Admin)
+│   ├── public/       # Next.js frontend for Marketing & Customer (Unauthenticated)
 │   └── api/          # Node.js + TypeScript backend API
 │
 ├── packages/
@@ -31,7 +32,6 @@ A separate `apps/kitchen` is optional. Initially, the kitchen display may be a r
 
 Responsibility: **Service Taker (Restaurants)**
 
-- Customer experience (Digital Menu, Ordering)
 - Restaurant dashboard
 - Kitchen/KDS UI
 - Waiter UI
@@ -52,6 +52,14 @@ Responsibility: **Service Provider (Super Admin)**
 - Cross-tenant metrics (where applicable)
 - Calling backend APIs
 - Realtime subscriptions where required
+
+## Frontend: `apps/public`
+
+Responsibility: **Marketing & Customers**
+
+- Public landing page (Hero, Features, Pricing)
+- Customer experience (Digital Menu, Ordering without authentication)
+- Calling backend APIs
 
 The frontend must not be the only enforcement layer for authorization or business rules.
 

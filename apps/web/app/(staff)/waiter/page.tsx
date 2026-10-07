@@ -1,71 +1,87 @@
-import { Card, CardContent } from "@workspace/ui/components/card"
-import { Button } from "@workspace/ui/components/button"
-import { Badge } from "@workspace/ui/components/badge"
-import { BellRing, Check, MoreVertical } from "lucide-react"
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card';
+import { Button } from '@workspace/ui/components/button';
+import { Badge } from '@workspace/ui/components/badge';
+import { DUMMY_WAITER_REQUESTS, DUMMY_TABLES, DUMMY_ORDERS } from '@/lib/dummy-data';
+import { BellRing, CheckCircle, Utensils } from 'lucide-react';
 
-export default function WaiterPage() {
+export default function WaiterDashboardPage() {
+  const readyOrders = DUMMY_ORDERS.filter(o => o.status === 'READY'); // Empty in our dummy data for now
+  
   return (
-    <div className="flex h-dvh flex-col bg-background">
-      <header className="flex h-14 items-center justify-between border-b px-4">
-        <h1 className="font-bold text-lg">Waiter - Floor 1</h1>
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="size-5" />
-        </Button>
+    <div className="flex flex-col min-h-screen bg-muted/20">
+      <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
+        <h1 className="text-lg font-semibold flex items-center gap-2">
+          Waiter Operations
+        </h1>
       </header>
       
-      <main className="flex-1 overflow-y-auto p-4 space-y-6">
-        <div>
-          <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Active Requests</h2>
-          <div className="space-y-3">
-            <Card className="border-red-200 bg-red-50/50 shadow-sm">
-              <CardContent className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600">
-                    <BellRing className="size-5" />
+      <main className="flex-1 p-4 flex flex-col gap-6">
+        {/* Waiter Requests Section */}
+        <section>
+          <h2 className="text-lg font-bold mb-3 flex items-center justify-between">
+            Active Requests
+            <Badge variant="destructive">{DUMMY_WAITER_REQUESTS.length}</Badge>
+          </h2>
+          <div className="flex flex-col gap-3">
+            {DUMMY_WAITER_REQUESTS.map(req => (
+              <Card key={req.id} className="border-l-4 border-l-destructive">
+                <CardContent className="p-4 flex items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1 bg-destructive/10 p-2 rounded-full">
+                      <BellRing className="size-4 text-destructive" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-lg">Table {req.tableId.split('-')[1]}</p>
+                      <p className="text-sm text-muted-foreground">{req.type} requested {req.time}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold">Table 12</p>
-                    <p className="text-sm text-red-600 font-medium">Assistance Requested (2m ago)</p>
-                  </div>
-                </div>
-                <Button size="icon" variant="outline" className="rounded-full size-10 bg-white hover:bg-green-50 hover:text-green-600 hover:border-green-200">
-                  <Check className="size-5" />
-                </Button>
-              </CardContent>
-            </Card>
+                  <Button variant="secondary" size="sm">
+                    <CheckCircle className="size-4 mr-2" />
+                    Resolve
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
+        </section>
 
-        <div>
-          <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Table Status</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="border-green-200 bg-green-50/30 shadow-sm">
-              <CardContent className="p-4 flex flex-col justify-between h-24">
-                <div className="flex justify-between items-start">
-                  <span className="font-bold">Table 1</span>
-                  <Badge variant="outline" className="bg-white border-green-200 text-green-700">Eating</Badge>
-                </div>
-                <span className="text-xs text-muted-foreground font-medium">Order #1042</span>
+        {/* Ready to Serve Section */}
+        <section>
+          <h2 className="text-lg font-bold mb-3 flex items-center justify-between">
+            Ready to Serve
+            <Badge variant="secondary">{readyOrders.length}</Badge>
+          </h2>
+          {readyOrders.length === 0 ? (
+            <Card className="border-dashed bg-muted/50">
+              <CardContent className="p-8 text-center text-muted-foreground">
+                No orders waiting to be served.
               </CardContent>
             </Card>
-            <Card className="border-blue-200 bg-blue-50/30 shadow-sm">
-              <CardContent className="p-4 flex flex-col justify-between h-24">
-                <div className="flex justify-between items-start">
-                  <span className="font-bold">Table 2</span>
-                  <Badge variant="outline" className="bg-white border-blue-200 text-blue-700">Food Ready</Badge>
-                </div>
-                <Button size="sm" className="h-6 text-[10px] w-fit">Serve Now</Button>
-              </CardContent>
-            </Card>
-            <Card className="opacity-60 border-dashed shadow-sm">
-              <CardContent className="p-4 flex flex-col justify-between h-24 items-center justify-center text-muted-foreground">
-                <span className="font-medium">Table 3</span>
-                <span className="text-xs">Empty</span>
-              </CardContent>
-            </Card>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {/* Dummy rendering for future data */}
+            </div>
+          )}
+        </section>
+
+        {/* Table Overview Section */}
+        <section>
+          <h2 className="text-lg font-bold mb-3">Table Status</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {DUMMY_TABLES.map(table => (
+              <Card key={table.id} className={table.status === 'OCCUPIED' ? 'border-primary' : ''}>
+                <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                  <span className="font-bold">{table.name}</span>
+                  <Badge variant={table.status === 'OCCUPIED' ? 'default' : 'outline'}>
+                    {table.status}
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
+        </section>
       </main>
     </div>
-  )
+  );
 }
