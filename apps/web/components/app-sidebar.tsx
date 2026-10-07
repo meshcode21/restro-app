@@ -3,20 +3,118 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger, useSidebar, SidebarRail } from "@workspace/ui/components/sidebar";
-import { BadgeCheck, Banknote, BarChart3, Bell, ChevronDown, ChevronRight, ChevronsUpDown, ConciergeBell, CreditCard, Globe, Grid, LayoutDashboard, LogOut, Package, ShoppingCart, Sparkles, Store, User2, UserCircle, Users, UtensilsCrossed, Zap } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar } from "@workspace/ui/components/sidebar";
+import { BadgeCheck, Banknote, BarChart3, Bell, ChevronRight, ChevronsUpDown, ConciergeBell, CreditCard, Globe, Grid, LayoutDashboard, LogOut, Package, ShoppingCart, Sparkles, UserCircle, Users, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export function getSubItemUrl(parentUrl: string, subUrl: string): string {
+    if (!parentUrl || parentUrl === "#") return subUrl;
+    if (subUrl.startsWith(parentUrl)) return subUrl;
+    return `${parentUrl.replace(/\/+$/, "")}/${subUrl.replace(/^\/+/, "")}`;
+}
+
+export const sidebarData = {
+    user: {
+        name: "Mahesh Udas",
+        email: "maheshudas@gmail.com",
+        avatar: "MU",
+    },
+    navMain: [
+        {
+            title: "Dashboard",
+            url: "/dashboard",
+            icon: LayoutDashboard,
+        },
+        // {
+        //     title: "Orders",
+        //     url: "/dashboard/orders",
+        //     icon: ShoppingCart,
+        // },
+        // {
+        //     title: "Notification",
+        //     url: "/dashboard/notification",
+        //     icon: Bell,
+        // },
+        {
+            title: "Menu",
+            url: "/menu",
+            icon: UtensilsCrossed,
+            items: [
+                {
+                    title: "Dishes",
+                    url: "/dish-setup",
+                },
+                {
+                    title: "Category",
+                    url: "/category",
+                },
+                // {
+                //     title: "Add-Ons & Extras",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Menu Set",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Sub Menu",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Combo Offer",
+                //     url: "#",
+                // },
+            ],
+        },
+        // {
+        //     title: "Services",
+        //     url: "#",
+        //     icon: ConciergeBell,
+        // },
+        // {
+        //     title: "Table & Space",
+        //     url: "#",
+        //     icon: Grid,
+        // },
+        // {
+        //     title: "Inventory",
+        //     url: "#",
+        //     icon: Package,
+        // },
+        // {
+        //     title: "Finance",
+        //     url: "#",
+        //     icon: Banknote,
+        // },
+        // {
+        //     title: "Reports",
+        //     url: "#",
+        //     icon: BarChart3,
+        // },
+        // {
+        //     title: "Website",
+        //     url: "#",
+        //     icon: Globe,
+        // },
+        // {
+        //     title: "Customer",
+        //     url: "#",
+        //     icon: Users,
+        // },
+        // {
+        //     title: "Staff",
+        //     url: "#",
+        //     icon: UserCircle,
+        // },
+    ]
+};
+
+const data = sidebarData;
 
 export function AppSidebar() {
-    const {
-        state,
-        open,
-        setOpen,
-        openMobile,
-        setOpenMobile,
-        isMobile,
-        toggleSidebar,
-    } = useSidebar();
+    const { isMobile } = useSidebar();
+    const pathname = usePathname();
 
     return (
         <Sidebar
@@ -27,7 +125,6 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
-                            isActive={false}
                             className="hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground active:bg-transparent active:text-foreground data-open:bg-transparent data-open:text-foreground"
                             size="lg"
                             render={<Link href="/dashboard" />}
@@ -45,146 +142,52 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup>
-                    {/* <SidebarGroupLabel>Main</SidebarGroupLabel> */}
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton
-                                    isActive
-                                    className="h-10 px-3"
-                                    render={<Link href="/dashboard" />}
-                                >
-                                    <LayoutDashboard className="size-4" />
-                                    <span>Dashboard</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            {data.navMain.map((item) => {
+                                if (item.items && item.items.length > 0) {
+                                    return (
+                                        <Collapsible defaultOpen={false} key={item.title} className="group/collapsible">
+                                            <SidebarMenuItem>
+                                                <CollapsibleTrigger render={
+                                                    <SidebarMenuButton className="h-10 px-3 justify-between" />
+                                                }>
+                                                    <div className="flex items-center gap-2">
+                                                        {item.icon && <item.icon className="size-4" />}
+                                                        <span>{item.title}</span>
+                                                    </div>
+                                                    <ChevronRight className="size-4 text-muted-foreground transition-transform group-data-open/collapsible:rotate-90" />
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent>
+                                                    <SidebarMenuSub>
+                                                        {item.items.map((subItem) => {
+                                                            const fullUrl = getSubItemUrl(item.url, subItem.url);
+                                                            const isSubActive = pathname === fullUrl;
 
-                            <SidebarMenuItem>
-                                <SidebarMenuButton isActive={false} className="h-10 px-3" render={<Link href="/dashboard/orders" />}>
-                                    <ShoppingCart className="size-4 mr-2" />
-                                    <span>Orders</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                                                            return (
+                                                                <SidebarMenuSubItem key={subItem.title}>
+                                                                    <SidebarMenuSubButton isActive={isSubActive} render={<Link href={fullUrl} />}>
+                                                                        <span>{subItem.title}</span>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            );
+                                                        })}
+                                                    </SidebarMenuSub>
+                                                </CollapsibleContent>
+                                            </SidebarMenuItem>
+                                        </Collapsible>
+                                    );
+                                }
 
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="/dashboard/notification" />}>
-                                    <Bell className="size-4 mr-2" />
-                                    <span>Notification</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <Collapsible className="group/collapsible">
-                                <SidebarMenuItem>
-                                    <CollapsibleTrigger render={
-                                        <SidebarMenuButton className="h-10 px-3 justify-between" />
-                                    }>
-                                        <div className="flex items-center">
-                                            <UtensilsCrossed className="size-4 mr-2" />
-                                            <span>Menu</span>
-                                        </div>
-                                        <ChevronRight className="size-4 text-muted-foreground transition-transform group-data-open/collapsible:rotate-90" />
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent>
-                                        <SidebarMenuSub>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="/menu" />}>
-                                                    <span>Dishes</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="#" />}>
-                                                    <span>Category</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="#" />}>
-                                                    <span>Add-Ons & Extras</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="#" />}>
-                                                    <span>Menu Set</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="#" />}>
-                                                    <span>Sub Menu</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton render={<Link href="#" />}>
-                                                    <span>Combo Offer</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        </SidebarMenuSub>
-                                    </CollapsibleContent>
-                                </SidebarMenuItem>
-                            </Collapsible>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3 justify-between" render={<Link href="#" />}>
-                                    <div className="flex items-center">
-                                        <ConciergeBell className="size-4 mr-2" />
-                                        <span>Services</span>
-                                    </div>
-                                    <ChevronRight className="size-4 text-muted-foreground" />
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3 justify-between" render={<Link href="#" />}>
-                                    <div className="flex items-center">
-                                        <Grid className="size-4 mr-2" />
-                                        <span>Table & Space</span>
-                                    </div>
-                                    <ChevronRight className="size-4 text-muted-foreground" />
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3 justify-between" render={<Link href="#" />}>
-                                    <div className="flex items-center">
-                                        <Package className="size-4 mr-2" />
-                                        <span>Inventory</span>
-                                    </div>
-                                    <ChevronRight className="size-4 text-muted-foreground" />
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="#" />}>
-                                    <Banknote className="size-4 mr-2" />
-                                    <span>Finance</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="#" />}>
-                                    <BarChart3 className="size-4 mr-2" />
-                                    <span>Reports</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="#" />}>
-                                    <Globe className="size-4 mr-2" />
-                                    <span>Website</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="#" />}>
-                                    <Users className="size-4 mr-2" />
-                                    <span>Customer</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-
-                            <SidebarMenuItem>
-                                <SidebarMenuButton className="h-10 px-3" render={<Link href="#" />}>
-                                    <UserCircle className="size-4 mr-2" />
-                                    <span>Staff</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton isActive={pathname === item.url} className="h-10 px-3 flex gap-2" render={<Link href={item.url} />}>
+                                            {item.icon && <item.icon className="size-4" />}
+                                            <span>{item.title}</span>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                );
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -200,13 +203,13 @@ export function AppSidebar() {
                                     className="hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground active:bg-transparent active:text-foreground"
                                 />
                             }>
-                                <Avatar className="h-8 w-8 rounded-lg">
+                                <Avatar className="h-8 w-8 rounded-lg shrink-0">
                                     <AvatarImage />
-                                    <AvatarFallback className="rounded-lg">MU</AvatarFallback>
+                                    <AvatarFallback className="rounded-lg">{data.user.avatar}</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">Mahesh Udas</span>
-                                    <span className="truncate text-xs">maheshudas@gmail.com</span>
+                                    <span className="truncate font-medium">{data.user.name}</span>
+                                    <span className="truncate text-xs">{data.user.email}</span>
                                 </div>
                                 <ChevronsUpDown className="ml-auto size-4" />
                             </DropdownMenuTrigger>
@@ -220,12 +223,11 @@ export function AppSidebar() {
                                     <DropdownMenuLabel className="p-0 font-normal">
                                         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                             <Avatar className="h-8 w-8 rounded-lg">
-                                                {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                                                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                                <AvatarFallback className="rounded-lg">{data.user.avatar}</AvatarFallback>
                                             </Avatar>
                                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                                <span className="truncate font-medium">Mahesh Udas</span>
-                                                <span className="truncate text-xs">maheshudas@gmail.com</span>
+                                                <span className="truncate font-medium">{data.user.name}</span>
+                                                <span className="truncate text-xs">{data.user.email}</span>
                                             </div>
                                         </div>
                                     </DropdownMenuLabel>
