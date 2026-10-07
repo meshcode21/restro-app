@@ -7,7 +7,8 @@ Use a Turborepo monorepo managed by pnpm.
 ```text
 repository/
 ├── apps/
-│   ├── web/          # Next.js frontend
+│   ├── web/          # Next.js frontend for Service Taker (Restaurants)
+│   ├── admin/        # Next.js frontend for Service Provider (Super Admin)
 │   └── api/          # Node.js + TypeScript backend API
 │
 ├── packages/
@@ -28,15 +29,27 @@ A separate `apps/kitchen` is optional. Initially, the kitchen display may be a r
 
 ## Frontend: `apps/web`
 
-Responsibilities:
+Responsibility: **Service Taker (Restaurants)**
 
-- Customer experience
+- Customer experience (Digital Menu, Ordering)
 - Restaurant dashboard
 - Kitchen/KDS UI
 - Waiter UI
 - Billing UI
 - Menu/table/session administration UI
 - Authentication screens
+- Calling backend APIs
+- Realtime subscriptions where required
+
+## Frontend: `apps/admin`
+
+Responsibility: **Service Provider (Super Admin)**
+
+- Platform administration
+- Manual restaurant onboarding
+- Manual subscription activation
+- Super Admin authentication
+- Cross-tenant metrics (where applicable)
 - Calling backend APIs
 - Realtime subscriptions where required
 
