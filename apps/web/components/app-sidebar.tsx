@@ -1,10 +1,9 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
-import { Button } from "@workspace/ui/components/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, useSidebar } from "@workspace/ui/components/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger, useSidebar, SidebarRail } from "@workspace/ui/components/sidebar";
 import { BadgeCheck, Banknote, BarChart3, Bell, ChevronDown, ChevronRight, ChevronsUpDown, ConciergeBell, CreditCard, Globe, Grid, LayoutDashboard, LogOut, Package, ShoppingCart, Sparkles, Store, User2, UserCircle, Users, UtensilsCrossed, Zap } from "lucide-react";
 import Link from "next/link";
 
@@ -24,7 +23,7 @@ export function AppSidebar() {
             collapsible={isMobile ? "offcanvas" : "icon"}
             className="border-r bg-background"
         >
-            <SidebarHeader className="border-b">
+            <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
@@ -261,6 +260,7 @@ export function AppSidebar() {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>
+            <SidebarRail />
         </Sidebar>
     );
 }
