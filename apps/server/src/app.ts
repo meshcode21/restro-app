@@ -3,15 +3,23 @@ import cors from 'cors';
 import superAdminRoutes from './routes/super-admin.routes';
 import branchRoutes from './routes/branch.routes';
 
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.routes';
+
 export const app: Application = express();
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // API Routes
+app.use('/api/admin', authRoutes);
 app.use('/api/admin', superAdminRoutes);
 app.use('/api/branches', branchRoutes);

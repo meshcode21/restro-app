@@ -7,6 +7,7 @@ export class BranchService {
     const [branch] = await db.insert(branches).values({
       organizationId,
       name: data.name,
+      slug: data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
     }).returning();
     
     return branch;

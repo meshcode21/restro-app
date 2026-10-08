@@ -34,10 +34,14 @@ The API is backend-owned. Endpoint names below are provisional and can be refine
 Likely capabilities:
 
 ```text
-POST  /api/admin/organizations
+POST  /api/admin/login
+POST  /api/admin/logout
+GET   /api/admin/metrics
 GET   /api/admin/organizations
+POST  /api/admin/organizations
 GET   /api/admin/organizations/:id
 PATCH /api/admin/organizations/:id
+GET   /api/admin/subscriptions
 POST  /api/admin/organizations/:id/subscription/activate
 POST  /api/admin/organizations/:id/suspend
 ```

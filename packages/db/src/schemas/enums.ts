@@ -11,3 +11,5 @@ export const branchMemberRoleEnum = pgEnum('branch_member_role', ['manager', 'ca
 export const tableStatusEnum = pgEnum('table_status', ['available', 'occupied', 'inactive']);
 export const tableSessionStatusEnum = pgEnum('table_session_status', ['active', 'closed']);
 export const orderStatusEnum = pgEnum('order_status', ['pending', 'confirmed', 'preparing', 'ready', 'served', 'cancelled']);
+export const subscriptionStatusEnum = pgEnum('subscription_status', ['active', 'past_due', 'canceled', 'trialing']);
+export const subscriptionPlanEnum = pgEnum('subscription_plan', ['starter', 'pro', 'enterprise']);

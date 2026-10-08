@@ -4,7 +4,7 @@ import { db, organizations } from '@workspace/db'; // Verifying DB connection ac
 
 dotenv.config({ path: '../../.env' });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   try {

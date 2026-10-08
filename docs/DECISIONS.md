@@ -94,7 +94,7 @@ Persist item name/price snapshots on order items.
 
 **Status:** Accepted
 
-Separate the frontend into two apps: `apps/web` (for restaurants/service takers) and `apps/admin` (for the platform/service provider super admin).
+Separate the frontend into two apps: `apps/organization-app` (for restaurants/service takers) and `apps/platform-app` (for the platform/service provider super admin).
 
 **Reason:** Clear separation of concerns and security boundaries. The platform admin interface (manual onboarding, subscriptions) is logically distinct from the restaurant operations interface (digital menu, KDS, billing).
 

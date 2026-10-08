@@ -5,8 +5,8 @@ The roadmap prioritizes proving the core dining workflow before expanding into E
 ## Phase 0 — Monorepo foundation
 
 - [x] Turborepo + pnpm
-- [x] `apps/web`
-- [x] `apps/api`
+- [x] `apps/organization-app`
+- [x] `apps/server`
 - [x] shared packages
 - [x] PostgreSQL development environment
 - [x] Drizzle setup + migrations

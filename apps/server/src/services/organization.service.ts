@@ -1,6 +1,6 @@
 import { db, organizations, users, organizationMembers } from '@workspace/db';
 import { OnboardOrganizationInput } from '@workspace/validation';
-import * as crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 export class OrganizationService {
   static async onboardOrganization(data: OnboardOrganizationInput) {
@@ -9,15 +9,15 @@ export class OrganizationService {
       // 1. Create Organization (SaaS Tenant)
       const [org] = await tx.insert(organizations).values({
         name: data.organizationName,
-        subscriptionStatus: 'ACTIVE',
+        slug: data.slug,
+        status: 'active',
       }).returning();
 
       // 2. Create initial Admin User
       const [user] = await tx.insert(users).values({
         name: data.adminName,
         email: data.adminEmail,
-        // Basic hash until auth provider is decided (ADR-001)
-        passwordHash: crypto.createHash('sha256').update(data.adminPassword).digest('hex'),
+        passwordHash: await bcrypt.hash(data.adminPassword, 10),
       }).returning();
 
       if (!org || !user) {
@@ -28,7 +28,7 @@ export class OrganizationService {
       await tx.insert(organizationMembers).values({
         userId: user.id,
         organizationId: org.id,
-        role: 'ORG_ADMIN',
+        role: 'admin',
       });
 
       return { 

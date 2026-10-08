@@ -5,6 +5,9 @@ import { requireSuperAdmin } from '../middlewares/auth.middleware';
 const router: IRouter = Router();
 
 // CODING_STANDARDS: route -> auth -> validation -> controller
+router.get('/metrics', requireSuperAdmin, SuperAdminController.getMetrics);
+router.get('/organizations', requireSuperAdmin, SuperAdminController.getOrganizations);
 router.post('/organizations', requireSuperAdmin, SuperAdminController.createOrganization);
+router.get('/subscriptions', requireSuperAdmin, SuperAdminController.getSubscriptions);
 
 export default router;

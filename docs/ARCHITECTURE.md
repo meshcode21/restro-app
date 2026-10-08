@@ -26,9 +26,9 @@ repository/
 └── turbo.json
 ```
 
-A separate `apps/kitchen` is optional. Initially, the kitchen display may be a role-specific area of `apps/web`.
+A separate `apps/kitchen` is optional. Initially, the kitchen display may be a role-specific area of `apps/organization-app`.
 
-## Frontend: `apps/web`
+## Frontend: `apps/organization-app`
 
 Responsibility: **Service Taker (Restaurants)**
 
@@ -41,7 +41,7 @@ Responsibility: **Service Taker (Restaurants)**
 - Calling backend APIs
 - Realtime subscriptions where required
 
-## Frontend: `apps/admin`
+## Frontend: `apps/platform-app`
 
 Responsibility: **Service Provider (Super Admin)**
 
@@ -63,7 +63,7 @@ Responsibility: **Marketing & Customers**
 
 The frontend must not be the only enforcement layer for authorization or business rules.
 
-## Backend: `apps/api`
+## Backend: `apps/server`
 
 Responsibilities:
 
