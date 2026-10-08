@@ -2,6 +2,7 @@ import { pgTable, text, uuid, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { timestamps } from './_helpers';
 import { organizationMembers } from './organizationMembers';
+import { platformMembers } from './platformMembers';
 import { userStatusEnum } from './enums';
 
 export const users = pgTable('users', {
@@ -17,6 +18,7 @@ export const users = pgTable('users', {
   ...timestamps,
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   memberships: many(organizationMembers),
+  platformMember: one(platformMembers),
 }));

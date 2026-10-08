@@ -29,6 +29,9 @@ For workflow-specific work, also read the relevant file in `docs/workflows/`.
 - Do not introduce a new dependency without a clear reason.
 - Never trust a client-provided tenant/organization ID for authorization.
 - Every tenant-owned query must be scoped to the authenticated organization.
+- Strictly maintain the separation between platform administration (`platform_members`) and restaurant organization management (`organization_members`).
+- Never add platform-level roles or authorization flags to the `users` table. Platform access must be verified exclusively against active records in `platform_members`.
+- Never implement public registration or self-provisioning for platform administration roles.
 - Backend authorization and business validation are mandatory even when the frontend validates too.
 - Prefer small, focused changes over broad refactors.
 - Inspect existing code before introducing a new abstraction.

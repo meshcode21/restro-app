@@ -67,7 +67,7 @@ The frontend must not be the only enforcement layer for authorization or busines
 
 Responsibilities:
 
-- Authentication and authorization
+- Authentication and authorization (including platform vs organization scopes)
 - Tenant/branch resolution
 - Business logic
 - Table-session lifecycle
@@ -122,13 +122,17 @@ V1 supports recording/manual settlement for methods such as cash and local QR pa
 
 The architecture should still leave a clean boundary for future gateway adapters and verified webhooks.
 
-## Authentication
+## Authentication & Platform Provisioning
 
 Staff authentication and customer table-session authorization are separate concerns.
 
-**Staff auth provider/design: TBD.**
-
 Customer table access is based on the active table session and its session access code, not staff identity.
+
+**Platform Administration Access:**
+Platform roles (e.g. `owner`, `admin`, `support`, `billing`) are managed separately via the `platform_members` table.
+- A user may have both platform and organization memberships, but each grants access independently.
+- Platform access cannot be self-provisioned via public registration or client-side input. The initial platform owner is provisioned through a secure seed/controlled setup process.
+- Endpoints must verify the authenticated user, an existing `platform_members` record, an `active` status, and sufficient permissions.
 
 ## Onboarding and subscriptions
 

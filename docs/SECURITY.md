@@ -22,6 +22,13 @@ Staff authentication provider/design: **TBD**.
 
 Customer access is granted only after joining an active table session with the valid session access code.
 
+## Platform Administration Authorization
+
+Platform-level operations (super admin, support) are managed independently via the `platform_members` table.
+- A user must have an active `platform_members` record with the required role.
+- Platform membership must be provisioned via a secure seed or controlled setup, never via public registration or client-side input.
+- Endpoints serving platform functions (`apps/admin`) must verify this membership explicitly. Front-end route hiding is not sufficient.
+
 ## Session access code
 
 Requirements:

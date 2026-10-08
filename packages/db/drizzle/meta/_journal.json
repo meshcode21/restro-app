@@ -8,6 +8,13 @@
       "when": 1791431987222,
       "tag": "0000_bent_orphan",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791474501688,
+      "tag": "0001_friendly_blink",
+      "breakpoints": true
     }
   ]
 }

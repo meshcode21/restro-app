@@ -12,3 +12,4 @@ export * from './products';
 export * from './branchProducts';
 export * from './orders';
 export * from './orderItems';
+export * from './platformMembers';

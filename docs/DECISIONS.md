@@ -98,6 +98,14 @@ Separate the frontend into two apps: `apps/web` (for restaurants/service takers)
 
 **Reason:** Clear separation of concerns and security boundaries. The platform admin interface (manual onboarding, subscriptions) is logically distinct from the restaurant operations interface (digital menu, KDS, billing).
 
+## ADR-013 — Separate Platform Administration Membership
+
+**Status:** Accepted
+
+Separate platform-level administration from restaurant organization management by introducing a `platform_members` table, distinct from `users` and `organization_members`.
+
+**Reason:** A user may have both platform and organization memberships, but each grants access independently. This prevents privilege escalation (e.g., a support employee gaining restaurant management access, or a restaurant owner gaining platform administration access). Platform membership must be explicitly provisioned via secure setup, never via public registration.
+
 ## Open decisions
 
 Record each choice here once finalized:

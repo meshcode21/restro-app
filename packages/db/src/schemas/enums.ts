@@ -1,6 +1,8 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
 export const userStatusEnum = pgEnum('user_status', ['active', 'suspended', 'deleted']);
+export const platformMemberRoleEnum = pgEnum('platform_member_role', ['owner', 'admin', 'support', 'billing']);
+export const platformMemberStatusEnum = pgEnum('platform_member_status', ['active', 'invited', 'suspended']);
 export const organizationStatusEnum = pgEnum('organization_status', ['trial', 'active', 'suspended', 'cancelled']);
 export const organizationMemberRoleEnum = pgEnum('organization_member_role', ['owner', 'admin', 'member']);
 export const organizationMemberStatusEnum = pgEnum('organization_member_status', ['active', 'invited', 'suspended']);

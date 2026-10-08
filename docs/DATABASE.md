@@ -12,6 +12,7 @@ Drizzle ORM
 
 ```text
 Platform
+├── Platform Members (super admins, support, billing)
 └── Organizations (tenants)
      ├── Subscription
      ├── Branches
@@ -83,7 +84,20 @@ Exact auth-provider mapping is TBD.
 
 Connect staff users to organizations/branches and roles.
 
-Exact RBAC shape is TBD.
+**Note:** `platform_members` (owner, admin, support, billing) is strictly separated from `organization_members` (owner, admin, member) and `branch_members` (manager, cashier, waiter, etc.). A user can have both platform and organization memberships, but each grants access independently. A platform support employee does not automatically gain access to restaurant management, and vice versa.
+
+### platform_members
+
+Access to RestoFlow platform administration.
+
+Possible fields:
+
+- id
+- user_id (unique)
+- role (owner, admin, support, billing)
+- status (active, invited, suspended)
+- created_at
+- updated_at
 
 ### tables
 
