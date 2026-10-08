@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1791277448444,
-      "tag": "0000_rich_sabra",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1791279608561,
-      "tag": "0001_sweet_silverclaw",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1791279949971,
-      "tag": "0002_flippant_warstar",
+      "when": 1791431987222,
+      "tag": "0000_bent_orphan",
       "breakpoints": true
     }
   ]

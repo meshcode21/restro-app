@@ -1,13 +1,19 @@
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { timestamps } from './_helpers';
 import { organizationMembers } from './organizationMembers';
+import { userStatusEnum } from './enums';
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
-  email: text('email').unique().notNull(),
-  passwordHash: text('password_hash').notNull(),
   name: text('name').notNull(),
+  email: text('email').unique().notNull(),
+  phone: text('phone'),
+  passwordHash: text('password_hash'),
+  avatarUrl: text('avatar_url'),
+  emailVerified: boolean('email_verified').default(false).notNull(),
+  phoneVerified: boolean('phone_verified').default(false).notNull(),
+  status: userStatusEnum('status').default('active').notNull(),
   ...timestamps,
 });
 
