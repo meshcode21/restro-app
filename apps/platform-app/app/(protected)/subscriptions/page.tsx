@@ -9,6 +9,7 @@ import {
 } from '@workspace/ui/components/table';
 import { Button } from '@workspace/ui/components/button';
 import { Badge } from '@workspace/ui/components/badge';
+import { SubscriptionActions } from '@/components/subscription-actions';
 
 async function getSubscriptions() {
   const cookieStore = await cookies();
@@ -75,11 +76,11 @@ export default async function SubscriptionsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>{sub.endsAt ? new Date(sub.endsAt).toLocaleDateString() : 'N/A'}</TableCell>
-                  <TableCell className="text-right gap-2">
-                    {sub.status !== 'active' && (
-                      <Button variant="outline" size="sm" className="mr-2">Activate</Button>
-                    )}
-                    <Button variant="ghost" size="sm">Manage</Button>
+                  <TableCell className="text-right">
+                    <SubscriptionActions 
+                      organizationId={sub.organizationId} 
+                      status={sub.status} 
+                    />
                   </TableCell>
                 </TableRow>
               ))

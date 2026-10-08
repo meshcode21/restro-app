@@ -46,9 +46,9 @@ export default async function OrganizationsPage() {
             Manage restaurant tenants across the platform.
           </p>
         </div>
-        <Button render={<Link href="/organizations/new" />}>
-            <Plus data-icon="inline-start" />
-            Add Organization
+        <Button nativeButton={false} render={<Link href="/organizations/new" />}>
+          <Plus data-icon="inline-start" />
+          <span>Add Organization</span>
         </Button>
       </div>
 

@@ -1,4 +1,4 @@
-import { db, organizations, users, organizationMembers } from '@workspace/db';
+import { db, organizations, users, organizationMembers, subscriptions } from '@workspace/db';
 import { OnboardOrganizationInput } from '@workspace/validation';
 import bcrypt from 'bcryptjs';
 
@@ -29,6 +29,13 @@ export class OrganizationService {
         userId: user.id,
         organizationId: org.id,
         role: 'admin',
+      });
+
+      // 4. Create default subscription
+      await tx.insert(subscriptions).values({
+        organizationId: org.id,
+        plan: 'starter',
+        status: 'trialing',
       });
 
       return { 

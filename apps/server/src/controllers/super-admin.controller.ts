@@ -61,6 +61,7 @@ export class SuperAdminController {
       const data = await db
         .select({
           id: subscriptions.id,
+          organizationId: subscriptions.organizationId,
           organizationName: organizations.name,
           plan: subscriptions.plan,
           status: subscriptions.status,
@@ -72,6 +73,36 @@ export class SuperAdminController {
       res.status(200).json(data);
     } catch (error) {
       console.error('[SuperAdminController.getSubscriptions] Error:', error);
+      res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
+    }
+  }
+
+  static async activateSubscription(req: Request, res: Response) {
+    try {
+      const orgId = req.params.id;
+      if (!orgId || typeof orgId !== 'string') {
+        return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Organization ID is required' } });
+      }
+      
+      const endsAt = new Date();
+      endsAt.setDate(endsAt.getDate() + 30); // 30 days default
+
+      const [updated] = await db
+        .update(subscriptions)
+        .set({
+          status: 'active',
+          endsAt,
+        })
+        .where(eq(subscriptions.organizationId, orgId))
+        .returning();
+
+      if (!updated) {
+        return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Subscription not found for this organization' } });
+      }
+
+      res.status(200).json({ data: updated });
+    } catch (error) {
+      console.error('[SuperAdminController.activateSubscription] Error:', error);
       res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
     }
   }
