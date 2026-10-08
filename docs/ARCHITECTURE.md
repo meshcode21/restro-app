@@ -53,7 +53,7 @@ Responsibility: **Service Provider (Super Admin)**
 - Calling backend APIs
 - Realtime subscriptions where required
 
-## Frontend: `apps/public`
+## Frontend: `apps/public-app`
 
 Responsibility: **Marketing & Customers**
 
