@@ -1,73 +1,33 @@
-import React from 'react';
-import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@workspace/ui/components/card';
-import { Button } from '@workspace/ui/components/button';
-import { ChefHat, LayoutDashboard, QrCode, Utensils } from 'lucide-react';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function RootHomePage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/20">
-      <div className="max-w-3xl w-full flex flex-col gap-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">Restaurant Platform (V1)</h1>
-          <p className="text-muted-foreground">Select a portal to view the dummy UI prototypes.</p>
-        </div>
+export default async function RootHomePage() {
+  const cookieStore = await cookies();
+  const tenantSession = cookieStore.get("tenant_session")?.value;
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  if (!tenantSession) {
+    // If not logged in at all, go to login
+    redirect("/login");
+  }
 
+  try {
+    // Decode JWT payload (base64url)
+    const payloadBase64 = tenantSession.split('.')[1];
+    if (!payloadBase64) throw new Error("Invalid token format");
+    const payload = JSON.parse(Buffer.from(payloadBase64, 'base64').toString('utf-8'));
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <LayoutDashboard className="size-5" />
-                Restaurant Dashboard
-              </CardTitle>
-              <CardDescription>Admin overview, menu, and billing</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button nativeButton={false} render={
-                <Link href="/dashboard" />
-              } variant="default" className="w-full">
-                View Dashboard
-              </Button>
-            </CardContent>
-          </Card>
+    const role = payload.role;
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ChefHat className="size-5" />
-                Kitchen Display (KDS)
-              </CardTitle>
-              <CardDescription>Order preparation kanban board</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button nativeButton={false} render={
-                <Link href="/kds" />
-              } variant="default" className="w-full">
-                View KDS
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Utensils className="size-5" />
-                Waiter Operations
-              </CardTitle>
-              <CardDescription>Table status and active requests</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button nativeButton={false} render={
-                <Link href="/waiter" />
-              } variant="default" className="w-full">
-                View Waiter UI
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
+    if (role === 'waiter') {
+      redirect("/waiter");
+    } else if (role === 'kitchen') {
+      redirect("/kds");
+    } else {
+      // manager, admin, owner, cashier -> dashboard for now
+      redirect("/dashboard");
+    }
+  } catch (e) {
+    // If invalid token, just redirect to login
+    redirect("/login");
+  }
 }

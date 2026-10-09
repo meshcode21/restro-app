@@ -28,8 +28,10 @@ export class BranchController {
   static async listBranches(req: TenantRequest, res: Response) {
     try {
       const organizationId = req.tenant!.organizationId;
+      const userId = req.tenant!.userId;
+      const role = req.tenant!.role;
       
-      const results = await BranchService.listBranches(organizationId);
+      const results = await BranchService.listBranches(organizationId, userId, role);
       
       res.status(200).json({ data: results });
     } catch (error: any) {

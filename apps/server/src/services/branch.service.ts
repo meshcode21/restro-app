@@ -1,6 +1,6 @@
-import { db, branches } from '@workspace/db';
+import { db, branches, branchMembers, organizationMembers } from '@workspace/db';
 import { CreateBranchInput } from '@workspace/validation';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export class BranchService {
   static async createBranch(organizationId: string, data: CreateBranchInput) {
@@ -13,10 +13,39 @@ export class BranchService {
     return branch;
   }
 
-  static async listBranches(organizationId: string) {
-    // CODING_STANDARDS: Tenant-scoped data access. NEVER bypass this filter.
-    return await db.select()
+  static async listBranches(organizationId: string, userId: string, role: string) {
+    if (role === 'owner' || role === 'admin') {
+      return await db.select()
+        .from(branches)
+        .where(eq(branches.organizationId, organizationId));
+    } else {
+      // If member, only return branches they are explicitly assigned to
+      const userBranches = await db.select({
+        id: branches.id,
+        organizationId: branches.organizationId,
+        name: branches.name,
+        slug: branches.slug,
+        status: branches.status,
+        createdAt: branches.createdAt,
+        updatedAt: branches.updatedAt,
+      })
       .from(branches)
-      .where(eq(branches.organizationId, organizationId));
+      .innerJoin(
+        branchMembers,
+        eq(branchMembers.branchId, branches.id)
+      )
+      .innerJoin(
+        organizationMembers,
+        eq(organizationMembers.id, branchMembers.organizationMemberId)
+      )
+      .where(
+        and(
+          eq(branches.organizationId, organizationId),
+          eq(organizationMembers.userId, userId)
+        )
+      );
+      
+      return userBranches;
+    }
   }
 }

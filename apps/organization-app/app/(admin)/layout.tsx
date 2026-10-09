@@ -1,10 +1,19 @@
 import React from 'react';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '@workspace/ui/components/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { DynamicBreadcrumb } from '@/components/dynamic-breadcrumb';
 import { Separator } from '@workspace/ui/components/separator';
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const tenantSession = cookieStore.get('tenant_session');
+
+  if (!tenantSession) {
+    redirect('/login');
+  }
+
   return (
     <SidebarProvider
       style={

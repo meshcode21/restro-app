@@ -7,6 +7,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupConte
 import { BadgeCheck, Banknote, BarChart3, Bell, ChevronRight, ChevronsUpDown, ConciergeBell, CreditCard, Globe, Grid, LayoutDashboard, LogOut, Package, ShoppingCart, Sparkles, UserCircle, Users, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BranchSwitcher } from "./branch-switcher";
 
 export function getSubItemUrl(parentUrl: string, subUrl: string): string {
     if (!parentUrl || parentUrl === "#") return subUrl;
@@ -138,6 +139,9 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
+                
+                {/* Branch Switcher Injection */}
+                <BranchSwitcher />
             </SidebarHeader>
 
             <SidebarContent>

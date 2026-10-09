@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-fallback-key';
 
 export interface TenantRequest extends Request {
   tenant?: {
@@ -9,35 +12,27 @@ export interface TenantRequest extends Request {
 }
 
 export const requireTenant = (req: TenantRequest, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies?.tenant_session;
   
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ 
-      error: { code: 'UNAUTHORIZED', message: 'Missing token' } 
-    });
-  }
-
-  const token = authHeader.split(' ')[1];
   if (!token) {
     return res.status(401).json({ 
-      error: { code: 'UNAUTHORIZED', message: 'Missing token string' } 
+      error: { code: 'UNAUTHORIZED', message: 'Missing tenant session' } 
     });
   }
-  
-  // Mock token parser until real auth provider is implemented (ADR-001)
-  // Format: org_<orgId>_user_<userId>_role_<role>
-  const match = token.match(/^org_(.+?)_user_(.+?)_role_(.+)$/);
-  if (!match || !match[1] || !match[2] || !match[3]) {
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    
+    req.tenant = {
+      userId: decoded.userId,
+      organizationId: decoded.organizationId,
+      role: decoded.role
+    };
+
+    next();
+  } catch (err) {
     return res.status(401).json({ 
-      error: { code: 'UNAUTHORIZED', message: 'Invalid token format' } 
+      error: { code: 'UNAUTHORIZED', message: 'Invalid or expired tenant session' } 
     });
   }
-
-  req.tenant = {
-    organizationId: match[1],
-    userId: match[2],
-    role: match[3]
-  };
-
-  next();
 };

@@ -13,6 +13,7 @@ const fontMono = Geist_Mono({
 })
 
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
+import { QueryProvider } from "@/components/providers"
 
 export default function RootLayout({
   children,
@@ -26,10 +27,12 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
       <body>
-        <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-          <ThemeToggle />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+            <ThemeToggle />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   )

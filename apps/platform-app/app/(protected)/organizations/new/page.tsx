@@ -16,10 +16,16 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Field, FieldGroup, FieldLabel, FieldDescription } from '@workspace/ui/components/field';
 
+function generateSlug(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 export default function NewOrganizationPage() {
   const router = useRouter();
   const [organizationName, setOrganizationName] = React.useState('');
   const [slug, setSlug] = React.useState('');
+  const [branchName, setBranchName] = React.useState('');
+  const [branchSlug, setBranchSlug] = React.useState('');
   const [adminName, setAdminName] = React.useState('');
   const [adminEmail, setAdminEmail] = React.useState('');
   const [adminPassword, setAdminPassword] = React.useState('');
@@ -38,7 +44,19 @@ export default function NewOrganizationPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    createOrgMutation.mutate({ organizationName, slug, adminName, adminEmail, adminPassword });
+    createOrgMutation.mutate({ organizationName, slug, branchName, branchSlug, adminName, adminEmail, adminPassword });
+  };
+
+  const handleOrgNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setOrganizationName(val);
+    setSlug(generateSlug(val));
+  };
+
+  const handleBranchNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setBranchName(val);
+    setBranchSlug(generateSlug(val));
   };
 
   return (
@@ -70,7 +88,7 @@ export default function NewOrganizationPage() {
                   id="organizationName"
                   placeholder="e.g. Acme Dining"
                   value={organizationName}
-                  onChange={(e) => setOrganizationName(e.target.value)}
+                  onChange={handleOrgNameChange}
                   required
                 />
               </Field>
@@ -85,6 +103,28 @@ export default function NewOrganizationPage() {
                   required
                 />
                 <FieldDescription>A unique identifier for the tenant.</FieldDescription>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="branchName">Default Branch Name</FieldLabel>
+                <Input
+                  id="branchName"
+                  placeholder="e.g. Main Branch"
+                  value={branchName}
+                  onChange={handleBranchNameChange}
+                  required
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="branchSlug">Default Branch Slug</FieldLabel>
+                <Input
+                  id="branchSlug"
+                  placeholder="e.g. main-branch"
+                  value={branchSlug}
+                  onChange={(e) => setBranchSlug(e.target.value)}
+                  required
+                />
               </Field>
 
               <Field>

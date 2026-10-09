@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = React.useState('');
 
   const loginMutation = useMutation({
-    mutationFn: (data: Record<string, string>) => api.post('/admin/login', data),
+    mutationFn: (data: Record<string, string>) => api.post('/auth/admin/login', data),
     onSuccess: () => {
       // Redirect to the dashboard upon successful login
       window.location.href = '/';

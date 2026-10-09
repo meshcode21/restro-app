@@ -40,3 +40,24 @@ export const requireSuperAdmin = (req: Request, res: Response, next: NextFunctio
     });
   }
 };
+
+// General authentication middleware (checks auth_session)
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies?.auth_session;
+
+  if (!token) {
+    return res.status(401).json({
+      error: { code: 'UNAUTHORIZED', message: 'Authentication required' }
+    });
+  }
+  
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({
+      error: { code: 'UNAUTHORIZED', message: 'Invalid or expired session' }
+    });
+  }
+};

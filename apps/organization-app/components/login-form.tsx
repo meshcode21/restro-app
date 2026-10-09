@@ -1,24 +1,39 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
 import { cn } from "@workspace/ui/lib/utils"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card"
+import api from "@/lib/axios"
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const router = useRouter()
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  const [error, setError] = React.useState<string | null>(null)
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: Record<string, string>) => {
+      const response = await api.post("/auth/org/login", data)
+      return response.data
+    },
+    onSuccess: () => {
+      router.push("/select-organization")
+    },
+    onError: (err: any) => {
+      console.log(err)
+      setError(err.response?.data?.error?.message || "An error occurred during login.")
+    },
+  })
 
-    // Simulate login request
-    setTimeout(() => {
-      setIsLoading(false)
-      window.location.href = "/dashboard"
-    }, 1500)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    mutate({ email, password })
   }
 
   return (
@@ -31,7 +46,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -42,28 +57,34 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   autoCapitalize="none"
                   autoComplete="email"
                   autoCorrect="off"
-                  disabled={isLoading}
+                  disabled={isPending}
                   className="rounded-xl"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <a href="#" className="text-sm font-medium text-primary hover:underline">
-                    Forgot password?
-                  </a>
                 </div>
                 <Input
                   id="password"
                   type="password"
-                  disabled={isLoading}
+                  disabled={isPending}
                   className="rounded-xl"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
-              <Button disabled={isLoading} className="mt-2 w-full font-bold h-11 rounded-xl">
-                {isLoading && (
+              {error && (
+                <div className="p-3 bg-destructive/15 text-destructive rounded-xl text-sm">
+                  {error}
+                </div>
+              )}
+              <Button type="submit" disabled={isPending} className="mt-2 w-full font-bold h-11 rounded-xl">
+                {isPending && (
                   <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" className="opacity-25" />
                     <path fill="currentColor" className="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -74,12 +95,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-4 text-sm text-center text-muted-foreground border-t bg-muted/20 p-4 rounded-b-2xl">
-          <div className="flex items-center gap-2">
-            <span>Admin Code:</span>
-            <span className="font-mono bg-muted px-2 py-1 rounded text-foreground font-semibold tracking-wider">DEV_SUPER_ADMIN</span>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   )

@@ -1,4 +1,4 @@
-import { db, organizations, users, organizationMembers, subscriptions } from '@workspace/db';
+import { db, organizations, users, organizationMembers, subscriptions, branches } from '@workspace/db';
 import { OnboardOrganizationInput } from '@workspace/validation';
 import bcrypt from 'bcryptjs';
 
@@ -36,6 +36,14 @@ export class OrganizationService {
         organizationId: org.id,
         plan: 'starter',
         status: 'trialing',
+      });
+
+      // 5. Create default branch
+      await tx.insert(branches).values({
+        organizationId: org.id,
+        name: data.branchName,
+        slug: data.branchSlug,
+        status: 'active',
       });
 
       return { 
