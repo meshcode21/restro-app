@@ -8,7 +8,7 @@ import { orderStatusEnum } from './enums';
 
 export const orders = pgTable('orders', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').notNull(),
+  tenantId: uuid('tenant_id').notNull(),
   branchId: uuid('branch_id').notNull(),
   tableId: uuid('table_id').notNull(),
   tableSessionId: uuid('table_session_id').notNull(),
@@ -22,15 +22,15 @@ export const orders = pgTable('orders', {
   ...timestamps,
 }, (t) => ({
   fkOrdersTableSession: foreignKey({
-    columns: [t.tableSessionId, t.tableId, t.branchId, t.organizationId],
-    foreignColumns: [tableSessions.id, tableSessions.tableId, tableSessions.branchId, tableSessions.organizationId],
+    columns: [t.tableSessionId, t.tableId, t.branchId, t.tenantId],
+    foreignColumns: [tableSessions.id, tableSessions.tableId, tableSessions.branchId, tableSessions.tenantId],
   }), // default is NO ACTION
   fkOrdersParticipant: foreignKey({
     columns: [t.participantId, t.tableSessionId],
     foreignColumns: [tableSessionParticipants.id, tableSessionParticipants.tableSessionId],
   }).onDelete('set null'),
   uqOrderNumberPerBranch: unique('uq_order_number_per_branch').on(t.branchId, t.orderNumber),
-  uqOrdersIdOrg: unique('uq_orders_id_org').on(t.id, t.organizationId),
+  uqOrdersIdOrg: unique('uq_orders_id_org').on(t.id, t.tenantId),
   chkOrderSubtotal: check('chk_order_subtotal', sql`${t.subtotal} >= 0`),
   chkOrderTax: check('chk_order_tax', sql`${t.taxAmount} >= 0`),
   chkOrderDiscount: check('chk_order_discount', sql`${t.discountAmount} >= 0`),
@@ -39,8 +39,8 @@ export const orders = pgTable('orders', {
 
 export const ordersRelations = relations(orders, ({ one, many }) => ({
   tableSession: one(tableSessions, {
-    fields: [orders.tableSessionId, orders.tableId, orders.branchId, orders.organizationId],
-    references: [tableSessions.id, tableSessions.tableId, tableSessions.branchId, tableSessions.organizationId],
+    fields: [orders.tableSessionId, orders.tableId, orders.branchId, orders.tenantId],
+    references: [tableSessions.id, tableSessions.tableId, tableSessions.branchId, tableSessions.tenantId],
   }),
   participant: one(tableSessionParticipants, {
     fields: [orders.participantId, orders.tableSessionId],

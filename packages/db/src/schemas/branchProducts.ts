@@ -6,7 +6,7 @@ import { products } from './products';
 
 export const branchProducts = pgTable('branch_products', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').notNull(),
+  tenantId: uuid('tenant_id').notNull(),
   branchId: uuid('branch_id').notNull(),
   productId: uuid('product_id').notNull(),
   price: numeric('price', { precision: 12, scale: 2 }).notNull(),
@@ -14,12 +14,12 @@ export const branchProducts = pgTable('branch_products', {
   ...timestamps,
 }, (t) => ({
   fkBranchProductsBranch: foreignKey({
-    columns: [t.branchId, t.organizationId],
-    foreignColumns: [branches.id, branches.organizationId],
+    columns: [t.branchId, t.tenantId],
+    foreignColumns: [branches.id, branches.tenantId],
   }).onDelete('cascade'),
   fkBranchProductsProduct: foreignKey({
-    columns: [t.productId, t.organizationId],
-    foreignColumns: [products.id, products.organizationId],
+    columns: [t.productId, t.tenantId],
+    foreignColumns: [products.id, products.tenantId],
   }).onDelete('cascade'),
   uqProductPerBranch: unique('uq_product_per_branch').on(t.branchId, t.productId),
   chkProductPrice: check('chk_product_price', sql`${t.price} >= 0`),
@@ -27,11 +27,11 @@ export const branchProducts = pgTable('branch_products', {
 
 export const branchProductsRelations = relations(branchProducts, ({ one }) => ({
   branch: one(branches, {
-    fields: [branchProducts.branchId, branchProducts.organizationId],
-    references: [branches.id, branches.organizationId],
+    fields: [branchProducts.branchId, branchProducts.tenantId],
+    references: [branches.id, branches.tenantId],
   }),
   product: one(products, {
-    fields: [branchProducts.productId, branchProducts.organizationId],
-    references: [products.id, products.organizationId],
+    fields: [branchProducts.productId, branchProducts.tenantId],
+    references: [products.id, products.tenantId],
   }),
 }));

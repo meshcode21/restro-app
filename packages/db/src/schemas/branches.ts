@@ -1,7 +1,7 @@
 import { pgTable, text, uuid, foreignKey, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { timestamps } from './_helpers';
-import { organizations } from './organizations';
+import { tenants } from './tenants';
 import { branchMembers } from './branchMembers';
 import { tables } from './tables';
 import { branchProducts } from './branchProducts';
@@ -9,7 +9,7 @@ import { branchStatusEnum } from './enums';
 
 export const branches = pgTable('branches', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').notNull(),
+  tenantId: uuid('tenant_id').notNull(),
   name: text('name').notNull(),
   slug: text('slug').notNull(),
   address: text('address'),
@@ -18,18 +18,18 @@ export const branches = pgTable('branches', {
   status: branchStatusEnum('status').default('active').notNull(),
   ...timestamps,
 }, (t) => ({
-  fkOrganization: foreignKey({
-    columns: [t.organizationId],
-    foreignColumns: [organizations.id],
+  fkTenant: foreignKey({
+    columns: [t.tenantId],
+    foreignColumns: [tenants.id],
   }).onDelete('cascade'),
-  uqBranchSlugPerOrganization: unique('uq_branch_slug_per_organization').on(t.organizationId, t.slug),
-  uqBranchesIdOrg: unique('uq_branches_id_org').on(t.id, t.organizationId),
+  uqBranchSlugPerTenant: unique('uq_branch_slug_per_tenant').on(t.tenantId, t.slug),
+  uqBranchesIdOrg: unique('uq_branches_id_org').on(t.id, t.tenantId),
 }));
 
 export const branchesRelations = relations(branches, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [branches.organizationId],
-    references: [organizations.id],
+  tenant: one(tenants, {
+    fields: [branches.tenantId],
+    references: [tenants.id],
   }),
   members: many(branchMembers),
   tables: many(tables),

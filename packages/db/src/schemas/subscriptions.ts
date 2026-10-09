@@ -1,12 +1,12 @@
 import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { timestamps } from './_helpers';
-import { organizations } from './organizations';
+import { tenants } from './tenants';
 import { subscriptionStatusEnum, subscriptionPlanEnum } from './enums';
 
 export const subscriptions = pgTable('subscriptions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').unique().notNull(),
+  tenantId: uuid('tenant_id').unique().notNull(),
   plan: subscriptionPlanEnum('plan').default('starter').notNull(),
   status: subscriptionStatusEnum('status').default('trialing').notNull(),
   startsAt: timestamp('starts_at', { withTimezone: true }),
@@ -16,8 +16,8 @@ export const subscriptions = pgTable('subscriptions', {
 });
 
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [subscriptions.organizationId],
-    references: [organizations.id],
+  tenant: one(tenants, {
+    fields: [subscriptions.tenantId],
+    references: [tenants.id],
   }),
 }));

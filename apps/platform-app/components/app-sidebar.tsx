@@ -33,8 +33,8 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Organizations',
-    url: '/organizations',
+    title: 'Tenants',
+    url: '/tenants',
     icon: Building2,
   },
   {

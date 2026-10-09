@@ -9,9 +9,9 @@ router.post('/platform/login', AuthController.loginPlatform);
 router.post('/platform/logout', AuthController.logoutPlatform);
 
 // --- ORGANIZATION AUTH ---
-router.post('/org/login', AuthController.loginOrganization);
-router.post('/org/logout', AuthController.logoutOrganization);
-// router.get('/org/organizations', requireAuth, AuthController.getOrganizations);
-// router.post('/org/organizations/select', requireAuth, AuthController.selectOrganization);
+router.post('/tenant/login', AuthController.loginTenant);
+router.post('/tenant/logout', AuthController.logoutTenant);
+// router.get('/tenant/tenants', requireAuth, AuthController.getTenants);
+// router.post('/tenant/tenants/select', requireAuth, AuthController.selectTenant);
 
 export default router;

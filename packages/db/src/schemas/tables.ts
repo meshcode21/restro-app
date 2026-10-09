@@ -7,7 +7,7 @@ import { tableStatusEnum } from './enums';
 
 export const tables = pgTable('tables', {
   id: uuid('id').defaultRandom().primaryKey(),
-  organizationId: uuid('organization_id').notNull(),
+  tenantId: uuid('tenant_id').notNull(),
   branchId: uuid('branch_id').notNull(),
   name: text('name').notNull(),
   qrToken: text('qr_token').unique().notNull(),
@@ -16,18 +16,18 @@ export const tables = pgTable('tables', {
   ...timestamps,
 }, (t) => ({
   fkTablesBranch: foreignKey({
-    columns: [t.branchId, t.organizationId],
-    foreignColumns: [branches.id, branches.organizationId],
+    columns: [t.branchId, t.tenantId],
+    foreignColumns: [branches.id, branches.tenantId],
   }).onDelete('cascade'),
   uqTableNamePerBranch: unique('uq_table_name_per_branch').on(t.branchId, t.name),
-  uqTablesIdBranchOrg: unique('uq_tables_id_branch_org').on(t.id, t.branchId, t.organizationId),
+  uqTablesIdBranchOrg: unique('uq_tables_id_branch_org').on(t.id, t.branchId, t.tenantId),
   chkTableCapacity: check('chk_table_capacity', sql`${t.capacity} > 0`),
 }));
 
 export const tablesRelations = relations(tables, ({ one, many }) => ({
   branch: one(branches, {
-    fields: [tables.branchId, tables.organizationId],
-    references: [branches.id, branches.organizationId],
+    fields: [tables.branchId, tables.tenantId],
+    references: [branches.id, branches.tenantId],
   }),
   tableSessions: many(tableSessions),
 }));

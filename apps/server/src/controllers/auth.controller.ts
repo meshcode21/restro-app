@@ -39,14 +39,14 @@ export class AuthController {
   }
 
   // --- ORGANIZATION AUTH ---
-  static async loginOrganization(req: Request, res: Response<ApiResponse<LoginResponse>>) {
+  static async loginTenant(req: Request, res: Response<ApiResponse<LoginResponse>>) {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
         return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Email and password required' } });
       }
 
-      const token = await AuthService.loginOrganization(email, password);
+      const token = await AuthService.loginTenant(email, password);
 
       res.cookie('auth_session', token, {
         httpOnly: true,
@@ -63,65 +63,65 @@ export class AuthController {
       if (error.code === 'FORBIDDEN') {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: error.message } });
       }
-      console.error('[AuthController.loginOrganization] Error:', error);
+      console.error('[AuthController.loginTenant] Error:', error);
       res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
     }
   }
 
-  static async logoutOrganization(req: Request, res: Response<ApiResponse<LoginResponse>>) {
+  static async logoutTenant(req: Request, res: Response<ApiResponse<LoginResponse>>) {
     res.clearCookie('auth_session');
     res.status(200).json({ data: { message: 'Logged out successfully' } });
   }
 
-  // static async getOrganizations(req: Request, res: Response) {
+  // static async getTenants(req: Request, res: Response) {
   //   try {
   //     const userId = req.user.userId;
 
-  //     // Select organizations the user is a member of
+  //     // Select tenants the user is a member of
   //     const userOrgs = await db
   //       .select({
-  //         organizationId: organizations.id,
-  //         name: organizations.name,
-  //         slug: organizations.slug,
-  //         role: organizationMembers.role,
+  //         tenantId: tenants.id,
+  //         name: tenants.name,
+  //         slug: tenants.slug,
+  //         role: tenantMembers.role,
   //       })
-  //       .from(organizationMembers)
-  //       .innerJoin(organizations, eq(organizationMembers.organizationId, organizations.id))
-  //       .where(eq(organizationMembers.userId, userId));
+  //       .from(tenantMembers)
+  //       .innerJoin(tenants, eq(tenantMembers.tenantId, tenants.id))
+  //       .where(eq(tenantMembers.userId, userId));
 
   //     res.status(200).json({ data: userOrgs });
   //   } catch (error) {
-  //     console.error('[AuthController.getOrganizations] Error:', error);
+  //     console.error('[AuthController.getTenants] Error:', error);
   //     res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
   //   }
   // }
 
-  // static async selectOrganization(req: Request, res: Response) {
+  // static async selectTenant(req: Request, res: Response) {
   //   try {
   //     const userId = req.user.userId;
-  //     const { organizationId } = req.body;
+  //     const { tenantId } = req.body;
 
-  //     if (!organizationId) {
-  //       return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Organization ID is required' } });
+  //     if (!tenantId) {
+  //       return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Tenant ID is required' } });
   //     }
 
   //     // Verify membership
   //     const memberList = await db
   //       .select()
-  //       .from(organizationMembers)
+  //       .from(tenantMembers)
   //       .where(and(
-  //         eq(organizationMembers.userId, userId),
-  //         eq(organizationMembers.organizationId, organizationId)
+  //         eq(tenantMembers.userId, userId),
+  //         eq(tenantMembers.tenantId, tenantId)
   //       ))
   //       .limit(1);
 
   //     const member = memberList[0];
   //     if (!member) {
-  //       return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Not a member of this organization' } });
+  //       return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Not a member of this tenant' } });
   //     }
 
   //     const token = jwt.sign(
-  //       { userId, organizationId, role: member.role },
+  //       { userId, tenantId, role: member.role },
   //       JWT_SECRET,
   //       { expiresIn: '1d' }
   //     );
@@ -133,9 +133,9 @@ export class AuthController {
   //       maxAge: 24 * 60 * 60 * 1000,
   //     });
 
-  //     res.status(200).json({ data: { message: 'Organization selected' } });
+  //     res.status(200).json({ data: { message: 'Tenant selected' } });
   //   } catch (error) {
-  //     console.error('[AuthController.selectOrganization] Error:', error);
+  //     console.error('[AuthController.selectTenant] Error:', error);
   //     res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
   //   }
   // }

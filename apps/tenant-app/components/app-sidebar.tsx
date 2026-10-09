@@ -262,7 +262,7 @@ export function AppSidebar() {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={async () => {
                                     try {
-                                        await api.post('/auth/org/logout');
+                                        await api.post('/auth/tenant/logout');
                                     } catch (e) {
                                         console.error('Logout failed', e);
                                     } finally {

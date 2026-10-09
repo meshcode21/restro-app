@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-fallback-key';
 export interface TenantRequest extends Request {
   tenant?: {
     userId: string;
-    organizationId: string;
+    tenantId: string;
     role: string;
   };
 }
@@ -25,7 +25,7 @@ export const requireTenant = (req: TenantRequest, res: Response, next: NextFunct
     
     req.tenant = {
       userId: decoded.userId,
-      organizationId: decoded.organizationId,
+      tenantId: decoded.tenantId,
       role: decoded.role
     };
 

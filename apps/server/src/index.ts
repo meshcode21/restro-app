@@ -1,6 +1,6 @@
 import { app } from './app';
 import * as dotenv from 'dotenv';
-import { db, organizations } from '@workspace/db'; // Verifying DB connection access
+import { db, tenants } from '@workspace/db'; // Verifying DB connection access
 
 dotenv.config({ path: '../../.env' });
 
@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 const start = async () => {
   try {
     // Optional: verify DB connection on startup
-    // await db.select().from(organizations).limit(1);
+    // await db.select().from(tenants).limit(1);
     
     app.listen(PORT, () => {
       console.log(`[API] Server is running on port ${PORT}`);

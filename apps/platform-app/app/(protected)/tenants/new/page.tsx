@@ -20,9 +20,9 @@ function generateSlug(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-export default function NewOrganizationPage() {
+export default function NewTenantPage() {
   const router = useRouter();
-  const [organizationName, setOrganizationName] = React.useState('');
+  const [tenantName, setTenantName] = React.useState('');
   const [slug, setSlug] = React.useState('');
   const [branchName, setBranchName] = React.useState('');
   const [branchSlug, setBranchSlug] = React.useState('');
@@ -32,24 +32,24 @@ export default function NewOrganizationPage() {
   const [errorMsg, setErrorMsg] = React.useState('');
 
   const createOrgMutation = useMutation({
-    mutationFn: (data: Record<string, string>) => api.post('/admin/organizations', data),
+    mutationFn: (data: Record<string, string>) => api.post('/admin/tenants', data),
     onSuccess: () => {
-      router.push('/organizations');
+      router.push('/tenants');
     },
     onError: (error: any) => {
-      setErrorMsg(error.response?.data?.error?.message || 'Failed to create organization. Please try again.');
+      setErrorMsg(error.response?.data?.error?.message || 'Failed to create tenant. Please try again.');
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    createOrgMutation.mutate({ organizationName, slug, branchName, branchSlug, adminName, adminEmail, adminPassword });
+    createOrgMutation.mutate({ tenantName, slug, branchName, branchSlug, adminName, adminEmail, adminPassword });
   };
 
   const handleOrgNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    setOrganizationName(val);
+    setTenantName(val);
     setSlug(generateSlug(val));
   };
 
@@ -64,13 +64,13 @@ export default function NewOrganizationPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Onboard Restaurant</h1>
         <p className="text-muted-foreground">
-          Manually create a new organization/tenant on the platform.
+          Manually create a new tenant/tenant on the platform.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Organization Details</CardTitle>
+          <CardTitle>Tenant Details</CardTitle>
           <CardDescription>Enter the basic details for the new tenant.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -83,11 +83,11 @@ export default function NewOrganizationPage() {
               )}
               
               <Field>
-                <FieldLabel htmlFor="organizationName">Business Name</FieldLabel>
+                <FieldLabel htmlFor="tenantName">Business Name</FieldLabel>
                 <Input
-                  id="organizationName"
+                  id="tenantName"
                   placeholder="e.g. Acme Dining"
-                  value={organizationName}
+                  value={tenantName}
                   onChange={handleOrgNameChange}
                   required
                 />
@@ -168,7 +168,7 @@ export default function NewOrganizationPage() {
                   Cancel
                 </Button>
                 <Button type="submit" disabled={createOrgMutation.isPending}>
-                  {createOrgMutation.isPending ? 'Creating...' : 'Create Organization'}
+                  {createOrgMutation.isPending ? 'Creating...' : 'Create Tenant'}
                 </Button>
               </div>
             </FieldGroup>

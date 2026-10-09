@@ -5,8 +5,8 @@ import { TenantRequest } from '../middlewares/tenant.middleware';
 export class MenuController {
   static async listGlobalProducts(req: TenantRequest, res: Response) {
     try {
-      const organizationId = req.tenant!.organizationId;
-      const products = await MenuService.listGlobalProducts(organizationId);
+      const tenantId = req.tenant!.tenantId;
+      const products = await MenuService.listGlobalProducts(tenantId);
       res.status(200).json({ data: products });
     } catch (error: any) {
       console.error('[MenuController.listGlobalProducts] Error:', error);
@@ -16,9 +16,9 @@ export class MenuController {
 
   static async listBranchProducts(req: TenantRequest, res: Response) {
     try {
-      const organizationId = req.tenant!.organizationId;
+      const tenantId = req.tenant!.tenantId;
       const branchId = req.params.branchId as string;
-      const products = await MenuService.listBranchProducts(organizationId, branchId);
+      const products = await MenuService.listBranchProducts(tenantId, branchId);
       res.status(200).json({ data: products });
     } catch (error: any) {
       console.error('[MenuController.listBranchProducts] Error:', error);

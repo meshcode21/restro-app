@@ -6,11 +6,11 @@ import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { Button } from '@workspace/ui/components/button';
 
-export function SubscriptionActions({ organizationId, status }: { organizationId: string, status: string }) {
+export function SubscriptionActions({ tenantId, status }: { tenantId: string, status: string }) {
   const router = useRouter();
   
   const activateMutation = useMutation({
-    mutationFn: () => api.post(`/admin/organizations/${organizationId}/subscription/activate`),
+    mutationFn: () => api.post(`/admin/tenants/${tenantId}/subscription/activate`),
     onSuccess: () => {
       // Reload the page to fetch the fresh RSC data
       router.refresh();

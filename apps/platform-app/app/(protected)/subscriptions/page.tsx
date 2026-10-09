@@ -42,7 +42,7 @@ export default async function SubscriptionsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Subscriptions</h1>
           <p className="text-muted-foreground">
-            Manage organization subscriptions and renewals.
+            Manage tenant subscriptions and renewals.
           </p>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default async function SubscriptionsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Organization</TableHead>
+              <TableHead>Tenant</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Expires At</TableHead>
@@ -68,7 +68,7 @@ export default async function SubscriptionsPage() {
             ) : (
               subscriptions.map((sub: any) => (
                 <TableRow key={sub.id}>
-                  <TableCell className="font-medium">{sub.organizationName}</TableCell>
+                  <TableCell className="font-medium">{sub.tenantName}</TableCell>
                   <TableCell className="capitalize">{sub.plan}</TableCell>
                   <TableCell>
                     <Badge variant={sub.status === 'active' ? 'default' : (sub.status === 'pending' ? 'secondary' : 'destructive')}>
@@ -78,7 +78,7 @@ export default async function SubscriptionsPage() {
                   <TableCell>{sub.endsAt ? new Date(sub.endsAt).toLocaleDateString() : 'N/A'}</TableCell>
                   <TableCell className="text-right">
                     <SubscriptionActions 
-                      organizationId={sub.organizationId} 
+                      tenantId={sub.tenantId} 
                       status={sub.status} 
                     />
                   </TableCell>

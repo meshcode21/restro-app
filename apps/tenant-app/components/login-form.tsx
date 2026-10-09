@@ -20,7 +20,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: Record<string, string>) => {
-      const response = await api.post("/auth/org/login", data)
+      const response = await api.post("/auth/tenant/login", data)
       return response.data
     },
     onSuccess: (response: { data: LoginResponse }) => {

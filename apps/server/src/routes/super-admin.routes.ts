@@ -6,9 +6,9 @@ const router: IRouter = Router();
 
 // CODING_STANDARDS: route -> auth -> validation -> controller
 router.get('/metrics', requireSuperAdmin, SuperAdminController.getMetrics);
-router.get('/organizations', requireSuperAdmin, SuperAdminController.getOrganizations);
-router.post('/organizations', requireSuperAdmin, SuperAdminController.createOrganization);
+router.get('/tenants', requireSuperAdmin, SuperAdminController.getTenants);
+router.post('/tenants', requireSuperAdmin, SuperAdminController.createTenant);
 router.get('/subscriptions', requireSuperAdmin, SuperAdminController.getSubscriptions);
-router.post('/organizations/:id/subscription/activate', requireSuperAdmin, SuperAdminController.activateSubscription);
+router.post('/tenants/:id/subscription/activate', requireSuperAdmin, SuperAdminController.activateSubscription);
 
 export default router;

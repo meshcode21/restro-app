@@ -1,14 +1,14 @@
-import { db, organizations, users, organizationMembers, subscriptions, branches } from '@workspace/db';
-import { OnboardOrganizationInput } from '@workspace/validation';
+import { db, tenants, users, tenantMembers, subscriptions, branches } from '@workspace/db';
+import { OnboardTenantInput } from '@workspace/validation';
 import bcrypt from 'bcryptjs';
 
-export class OrganizationService {
-  static async onboardOrganization(data: OnboardOrganizationInput) {
+export class TenantService {
+  static async onboardTenant(data: OnboardTenantInput) {
     // CODING_STANDARDS: Use transactions for atomic business operations.
     return await db.transaction(async (tx) => {
-      // 1. Create Organization (SaaS Tenant)
-      const [org] = await tx.insert(organizations).values({
-        name: data.organizationName,
+      // 1. Create Tenant (SaaS Tenant)
+      const [org] = await tx.insert(tenants).values({
+        name: data.tenantName,
         slug: data.slug,
         status: 'active',
       }).returning();
@@ -21,33 +21,33 @@ export class OrganizationService {
       }).returning();
 
       if (!org || !user) {
-        throw new Error('Failed to create organization or user');
+        throw new Error('Failed to create tenant or user');
       }
 
-      // 3. Link User to Organization as ORG_ADMIN
-      await tx.insert(organizationMembers).values({
+      // 3. Link User to Tenant as ORG_ADMIN
+      await tx.insert(tenantMembers).values({
         userId: user.id,
-        organizationId: org.id,
+        tenantId: org.id,
         role: 'admin',
       });
 
       // 4. Create default subscription
       await tx.insert(subscriptions).values({
-        organizationId: org.id,
+        tenantId: org.id,
         plan: 'starter',
         status: 'trialing',
       });
 
       // 5. Create default branch
       await tx.insert(branches).values({
-        organizationId: org.id,
+        tenantId: org.id,
         name: data.branchName,
         slug: data.branchSlug,
         status: 'active',
       });
 
       return { 
-        organizationId: org.id, 
+        tenantId: org.id, 
         userId: user.id 
       };
     });

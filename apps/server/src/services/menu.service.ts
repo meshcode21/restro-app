@@ -2,13 +2,13 @@ import { db, products, categories, branchProducts } from '@workspace/db';
 import { eq, and } from 'drizzle-orm';
 
 export class MenuService {
-  static async listGlobalProducts(organizationId: string) {
+  static async listGlobalProducts(tenantId: string) {
     return await db.select()
       .from(products)
-      .where(eq(products.organizationId, organizationId));
+      .where(eq(products.tenantId, tenantId));
   }
 
-  static async listBranchProducts(organizationId: string, branchId: string) {
+  static async listBranchProducts(tenantId: string, branchId: string) {
     return await db.select({
       id: branchProducts.id,
       productId: branchProducts.productId,
@@ -23,7 +23,7 @@ export class MenuService {
     .innerJoin(products, eq(products.id, branchProducts.productId))
     .where(
       and(
-        eq(branchProducts.organizationId, organizationId),
+        eq(branchProducts.tenantId, tenantId),
         eq(branchProducts.branchId, branchId)
       )
     );

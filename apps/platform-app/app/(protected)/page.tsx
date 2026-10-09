@@ -15,12 +15,12 @@ async function getMetrics() {
     });
 
     if (!res.ok) {
-      return { totalOrganizations: 0, activeSubscriptions: 0, totalPlatformMembers: 0 };
+      return { totalTenants: 0, activeSubscriptions: 0, totalPlatformMembers: 0 };
     }
     return res.json();
   } catch (err) {
     console.error('Failed to fetch metrics', err);
-    return { totalOrganizations: 0, activeSubscriptions: 0, totalPlatformMembers: 0 };
+    return { totalTenants: 0, activeSubscriptions: 0, totalPlatformMembers: 0 };
   }
 }
 
@@ -39,11 +39,11 @@ export default async function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Tenants</CardTitle>
             <Building2 className="text-muted-foreground size-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics.totalOrganizations}</div>
+            <div className="text-2xl font-bold">{metrics.totalTenants}</div>
           </CardContent>
         </Card>
         <Card>

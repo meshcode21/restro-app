@@ -1,4 +1,4 @@
-import { db, users, organizationMembers, branchMembers, platformMembers } from '@workspace/db';
+import { db, users, tenantMembers, branchMembers, platformMembers } from '@workspace/db';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -44,8 +44,8 @@ export class AuthService {
     return token;
   }
 
-  // organization login
-  static async loginOrganization(email: string, password: string): Promise<string> {
+  // tenant login
+  static async loginTenant(email: string, password: string): Promise<string> {
     const userList = await db.select().from(users).where(eq(users.email, email)).limit(1);
     const user = userList[0];
 
@@ -58,17 +58,17 @@ export class AuthService {
       throw new AppError('Invalid credentials', 'UNAUTHORIZED');
     }
 
-    const organizationMembersList = await db.select().from(organizationMembers).where(eq(organizationMembers.userId, user.id)).limit(1);
-    const organizationMember = organizationMembersList[0];
+    const tenantMembersList = await db.select().from(tenantMembers).where(eq(tenantMembers.userId, user.id)).limit(1);
+    const tenantMember = tenantMembersList[0];
 
-    if (!organizationMember || organizationMember.status !== 'active') {
+    if (!tenantMember || tenantMember.status !== 'active') {
       throw new AppError('Access denied', 'FORBIDDEN');
     }
 
     let token = '';
 
-    if (organizationMember.role === 'branch_member') {
-      const branchMemberList = await db.select().from(branchMembers).where(eq(branchMembers.organizationMemberId, organizationMember.id)).limit(1);
+    if (tenantMember.role === 'branch_member') {
+      const branchMemberList = await db.select().from(branchMembers).where(eq(branchMembers.tenantMemberId, tenantMember.id)).limit(1);
       const branchMember = branchMemberList[0];
       if (!branchMember) {
         throw new AppError('Access denied', 'FORBIDDEN');
@@ -81,7 +81,7 @@ export class AuthService {
       );
     } else {
       token = jwt.sign(
-        { userId: user.id, organizationId: organizationMember.id, role: organizationMember.role },
+        { userId: user.id, tenantId: tenantMember.id, role: tenantMember.role },
         JWT_SECRET,
         { expiresIn: '1d' }
       );

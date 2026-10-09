@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1791431987222,
-      "tag": "0000_bent_orphan",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1791474501688,
-      "tag": "0001_friendly_blink",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1791479377762,
-      "tag": "0002_sweet_stryfe",
+      "when": 1791568132696,
+      "tag": "0000_solid_inhumans",
       "breakpoints": true
     }
   ]

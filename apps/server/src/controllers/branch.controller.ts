@@ -6,10 +6,10 @@ import { TenantRequest } from '../middlewares/tenant.middleware';
 export class BranchController {
   static async createBranch(req: TenantRequest, res: Response) {
     try {
-      const organizationId = req.tenant!.organizationId;
+      const tenantId = req.tenant!.tenantId;
       const parsed = createBranchSchema.parse(req.body);
       
-      const branch = await BranchService.createBranch(organizationId, parsed);
+      const branch = await BranchService.createBranch(tenantId, parsed);
       
       res.status(201).json({ data: branch });
     } catch (error: any) {
@@ -27,11 +27,11 @@ export class BranchController {
 
   static async listBranches(req: TenantRequest, res: Response) {
     try {
-      const organizationId = req.tenant!.organizationId;
+      const tenantId = req.tenant!.tenantId;
       const userId = req.tenant!.userId;
       const role = req.tenant!.role;
       
-      const results = await BranchService.listBranches(organizationId, userId, role);
+      const results = await BranchService.listBranches(tenantId, userId, role);
       
       res.status(200).json({ data: results });
     } catch (error: any) {

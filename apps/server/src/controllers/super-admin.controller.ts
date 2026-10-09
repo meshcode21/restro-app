@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
-import { onboardOrganizationSchema } from '@workspace/validation';
-import { OrganizationService } from '../services/organization.service';
-import { db, organizations, subscriptions, platformMembers } from '@workspace/db';
+import { onboardTenantSchema } from '@workspace/validation';
+import { TenantService } from '../services/tenant.service';
+import { db, tenants, subscriptions, platformMembers } from '@workspace/db';
 import { count, eq } from 'drizzle-orm';
 
 export class SuperAdminController {
-  static async createOrganization(req: Request, res: Response) {
+  static async createTenant(req: Request, res: Response) {
     try {
       // CODING_STANDARDS: input validation
-      const parsed = onboardOrganizationSchema.parse(req.body);
+      const parsed = onboardTenantSchema.parse(req.body);
       
       // CODING_STANDARDS: application/domain logic
-      const result = await OrganizationService.onboardOrganization(parsed);
+      const result = await TenantService.onboardTenant(parsed);
       
       // CODING_STANDARDS: consistent response envelopes
       res.status(201).json({ data: result });
@@ -31,12 +31,12 @@ export class SuperAdminController {
 
   static async getMetrics(req: Request, res: Response) {
     try {
-      const [orgsCount] = await db.select({ value: count() }).from(organizations);
+      const [orgsCount] = await db.select({ value: count() }).from(tenants);
       const [subsCount] = await db.select({ value: count() }).from(subscriptions).where(eq(subscriptions.status, 'active'));
       const [membersCount] = await db.select({ value: count() }).from(platformMembers);
 
       res.status(200).json({
-        totalOrganizations: orgsCount?.value ?? 0,
+        totalTenants: orgsCount?.value ?? 0,
         activeSubscriptions: subsCount?.value ?? 0,
         totalPlatformMembers: membersCount?.value ?? 0,
       });
@@ -46,12 +46,12 @@ export class SuperAdminController {
     }
   }
 
-  static async getOrganizations(req: Request, res: Response) {
+  static async getTenants(req: Request, res: Response) {
     try {
-      const data = await db.select().from(organizations);
+      const data = await db.select().from(tenants);
       res.status(200).json(data);
     } catch (error) {
-      console.error('[SuperAdminController.getOrganizations] Error:', error);
+      console.error('[SuperAdminController.getTenants] Error:', error);
       res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
     }
   }
@@ -61,14 +61,14 @@ export class SuperAdminController {
       const data = await db
         .select({
           id: subscriptions.id,
-          organizationId: subscriptions.organizationId,
-          organizationName: organizations.name,
+          tenantId: subscriptions.tenantId,
+          tenantName: tenants.name,
           plan: subscriptions.plan,
           status: subscriptions.status,
           endsAt: subscriptions.endsAt,
         })
         .from(subscriptions)
-        .leftJoin(organizations, eq(subscriptions.organizationId, organizations.id));
+        .leftJoin(tenants, eq(subscriptions.tenantId, tenants.id));
 
       res.status(200).json(data);
     } catch (error) {
@@ -81,7 +81,7 @@ export class SuperAdminController {
     try {
       const orgId = req.params.id;
       if (!orgId || typeof orgId !== 'string') {
-        return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Organization ID is required' } });
+        return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Tenant ID is required' } });
       }
       
       const endsAt = new Date();
@@ -93,11 +93,11 @@ export class SuperAdminController {
           status: 'active',
           endsAt,
         })
-        .where(eq(subscriptions.organizationId, orgId))
+        .where(eq(subscriptions.tenantId, orgId))
         .returning();
 
       if (!updated) {
-        return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Subscription not found for this organization' } });
+        return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Subscription not found for this tenant' } });
       }
 
       res.status(200).json({ data: updated });

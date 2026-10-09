@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const onboardOrganizationSchema = z.object({
-  organizationName: z.string().min(1, "Organization name is required"),
+export const onboardTenantSchema = z.object({
+  tenantName: z.string().min(1, "Tenant name is required"),
   slug: z.string().min(1, "Slug is required"),
   branchName: z.string().min(1, "Branch name is required"),
   branchSlug: z.string().min(1, "Branch slug is required"),
@@ -10,5 +10,5 @@ export const onboardOrganizationSchema = z.object({
   adminPassword: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export type OnboardOrganizationInput = z.infer<typeof onboardOrganizationSchema>;
+export type OnboardTenantInput = z.infer<typeof onboardTenantSchema>;
 export * from './branch';

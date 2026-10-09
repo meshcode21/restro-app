@@ -14,7 +14,7 @@ export type BaseEntity = {
   updatedAt: Date;
 };
 
-export type Organization = BaseEntity & {
+export type Tenant = BaseEntity & {
   name: string;
 };
 
