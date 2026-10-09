@@ -9,6 +9,8 @@ import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card"
 import api from "@/lib/axios"
+import type { LoginResponse } from '@workspace/types';
+import { toast } from "sonner";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const router = useRouter()
@@ -21,18 +23,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       const response = await api.post("/auth/org/login", data)
       return response.data
     },
-    onSuccess: () => {
-      router.push("/select-organization")
+    onSuccess: (response: { data: LoginResponse }) => {
+      toast.success(response.data.message);
+      router.push("/dashboard");
     },
     onError: (err: any) => {
-      console.log(err)
-      setError(err.response?.data?.error?.message || "An error occurred during login.")
+      toast.error(err.response?.data?.error?.message || "An error occurred during login.")
     },
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
     mutate({ email, password })
   }
 

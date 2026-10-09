@@ -14,6 +14,7 @@ const fontMono = Geist_Mono({
 
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
 import { QueryProvider } from "@/components/providers"
+import { Toaster } from "@workspace/ui/components/sonner"
 
 export default function RootLayout({
   children,
@@ -31,6 +32,7 @@ export default function RootLayout({
           <ThemeProvider>
             <TooltipProvider>{children}</TooltipProvider>
             <ThemeToggle />
+            <Toaster />
           </ThemeProvider>
         </QueryProvider>
       </body>

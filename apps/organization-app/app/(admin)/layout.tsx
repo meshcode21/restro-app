@@ -8,9 +8,9 @@ import { Separator } from '@workspace/ui/components/separator';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const tenantSession = cookieStore.get('tenant_session');
+  const authSession = cookieStore.get('auth_session');
 
-  if (!tenantSession) {
+  if (!authSession) {
     redirect('/login');
   }
 

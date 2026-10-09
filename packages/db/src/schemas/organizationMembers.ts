@@ -10,7 +10,7 @@ export const organizationMembers = pgTable('organization_members', {
   id: uuid('id').defaultRandom().primaryKey(),
   organizationId: uuid('organization_id').notNull(),
   userId: uuid('user_id').notNull(),
-  role: organizationMemberRoleEnum('role').default('member').notNull(),
+  role: organizationMemberRoleEnum('role').notNull(),
   status: organizationMemberStatusEnum('status').default('active').notNull(),
   ...timestamps,
 }, (t) => ({

@@ -37,6 +37,9 @@ For workflow-specific work, also read the relevant file in `docs/workflows/`.
 - Inspect existing code before introducing a new abstraction.
 - Avoid building V1 features that are explicitly out of scope.
 - When using shadcn/ui components, be aware they use Base UI primitives. Use the `render={<Element />}` prop instead of the Radix UI `asChild` prop to avoid TypeScript errors.
+- Keep backend controllers thin. Isolate business logic in `apps/server/src/services/*.service.ts`. Controllers only handle request parsing and HTTP responses.
+- Ensure type-safe API responses using `Response<ApiResponse<T>>` in Express controllers. Define `ApiResponse` and data payload types in `@workspace/types`.
+- Use `AppError` class in services to throw errors with specific codes (`UNAUTHORIZED`, `FORBIDDEN`). Catch and map in controller. Do not cast `Error` to `any`.
 
 ## Product guardrails
 

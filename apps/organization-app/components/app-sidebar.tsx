@@ -8,6 +8,7 @@ import { BadgeCheck, Banknote, BarChart3, Bell, ChevronRight, ChevronsUpDown, Co
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BranchSwitcher } from "./branch-switcher";
+import api from "@/lib/axios";
 
 export function getSubItemUrl(parentUrl: string, subUrl: string): string {
     if (!parentUrl || parentUrl === "#") return subUrl;
@@ -259,7 +260,16 @@ export function AppSidebar() {
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={async () => {
+                                    try {
+                                        await api.post('/auth/org/logout');
+                                    } catch (e) {
+                                        console.error('Logout failed', e);
+                                    } finally {
+                                        localStorage.removeItem('active_branch_id');
+                                        window.location.href = '/login';
+                                    }
+                                }}>
                                     <LogOut />
                                     Log out
                                 </DropdownMenuItem>

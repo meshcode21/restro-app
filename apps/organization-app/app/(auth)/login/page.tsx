@@ -5,13 +5,14 @@ import { redirect } from "next/navigation"
 export default async function LoginPage() {
   const cookieStore = await cookies()
   
-  if (cookieStore.get("tenant_session")) {
+  // if (cookieStore.get("tenant_session")) {
+  //   redirect("/dashboard")
+  // }
+  
+  if (cookieStore.get("auth_session")) {
     redirect("/dashboard")
   }
   
-  if (cookieStore.get("auth_session")) {
-    redirect("/select-organization")
-  }
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2 text-center">
